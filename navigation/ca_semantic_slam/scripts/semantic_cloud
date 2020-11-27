@@ -42,34 +42,34 @@ class PointCloudGenerator:
         return not (self == other)
 
     def _make_pointcloud_msg(self, stamp, data):
-        msg = sensor_msgs.PointCloud2()
+        msg = sensor_msgs.msg.PointCloud2()
         msg.header.stamp = stamp
         msg.header.frame_id = self.frame_id
         msg.height = 1
         msg.width = self.width * self.height
-        msg.fields.append(sensor_msgs.PointField(
+        msg.fields.append(sensor_msgs.msg.PointField(
             name = "x", offset = 0,
-            datatype = sensor_msgs.PointField.FLOAT32,
+            datatype = sensor_msgs.msg.PointField.FLOAT32,
             count = 1)
         )
-        msg.fields.append(sensor_msgs.PointField(
+        msg.fields.append(sensor_msgs.msg.PointField(
             name = "y", offset = 4,
-            datatype = sensor_msgs.PointField.FLOAT32,
+            datatype = sensor_msgs.msg.PointField.FLOAT32,
             count = 1)
         )
-        msg.fields.append(sensor_msgs.PointField(
+        msg.fields.append(sensor_msgs.msg.PointField(
             name = "z", offset = 8,
-            datatype = sensor_msgs.PointField.FLOAT32,
+            datatype = sensor_msgs.msg.PointField.FLOAT32,
             count = 1)
         )
-        msg.fields.append(sensor_msgs.PointField(
+        msg.fields.append(sensor_msgs.msg.PointField(
             name = "bgr", offset = 16,
-            datatype = sensor_msgs.PointField.FLOAT32,
+            datatype = sensor_msgs.msg.PointField.FLOAT32,
             count = 1
         ))
-        msg.fields.append(sensor_msgs.PointField(
+        msg.fields.append(sensor_msgs.msg.PointField(
             name = "mask", offset = 24,
-            datatype = sensor_msgs.PointField.FLOAT32,
+            datatype = sensor_msgs.msg.PointField.FLOAT32,
             count = 1
         ))
         msg.data = data
@@ -106,18 +106,18 @@ class Implementation:
     def __init__(self):
         self._bridge = cv_bridge.CvBridge()
         self._cloud_pub = rospy.Publisher(
-           'semantic/cloud', sensor_msgs.PointCloud2, queue_size=1)
+           'semantic/cloud', sensor_msgs.msg.PointCloud2, queue_size=1)
         self._mask_sub = message_filters.Subscriber(
-           'semantic/color_mask', sensor_msgs.Image,
+           'semantic/color_mask', sensor_msgs.msg.Image,
            queue_size=1, buff_size=30*480*640)
         self._depth_sub = message_filters.Subscriber(
-           'depth_registered/image_rect', sensor_msgs.Image,
+           'depth_registered/image_rect', sensor_msgs.msg.Image,
            queue_size=1, buff_size=30*480*640)
         self._color_sub = message_filters.Subscriber(
-           'rgb/image_rect', sensor_msgs.Image,
+           'rgb/image_rect', sensor_msgs.msg.Image,
            queue_size=1, buff_size=30*480*640)
         self._depth_info_sub = rospy.Subscriber(
-           'depth_registered/camera_info', sensor_msgs.CameraInfo,
+           'depth_registered/camera_info', sensor_msgs.msg.CameraInfo,
            self._camera_info_callback, queue_size=1)
         self._time_sync = message_filters.ApproximateTimeSynchronizer(
            [self._mask_sub, self._depth_sub, self._color_sub], queue_size=1, slop=0.3)
