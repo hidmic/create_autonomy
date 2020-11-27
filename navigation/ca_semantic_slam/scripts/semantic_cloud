@@ -123,6 +123,7 @@ class Implementation:
            [self._mask_sub, self._depth_sub, self._color_sub], queue_size=1, slop=0.3)
         # Take in one color image and one depth image with a limite time gap between message time stamps
         self._time_sync.registerCallback(self._mask_depth_callback)
+        self._cloud_generator = None
 
     def _camera_info_callback(self, info):
        cloud_generator = PointCloudGenerator(
